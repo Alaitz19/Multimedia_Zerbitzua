@@ -9,6 +9,9 @@ var port = process.env.PORT || 8000;
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
+var calidadesRouter = require('./routes/calidades');
+
+
 
 var app = express();
 
@@ -21,7 +24,10 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+app.use('/videos', express.static(__dirname + '/public/videos'));
 
+
+app.use('/', calidadesRouter);
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 

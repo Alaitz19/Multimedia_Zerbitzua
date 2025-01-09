@@ -1,0 +1,41 @@
+doctype html
+html
+  head
+    title= title
+    script(src="https://cdn.jsdelivr.net/npm/hls.js@latest")  
+    style.
+      .video-container {
+        display: flex;
+        justify-content: space-around;
+        flex-wrap: wrap;
+        gap: 20px;
+      }
+      .video-item {
+        text-align: center;
+      }
+  body
+    h1= title
+    .video-container
+      each video, index in videos
+        .video-item
+          h2 #{video.quality}
+          video(controls preload="auto" width=video.width height=video.height id="video-" + index)
+            | Tu navegador no soporta reproducción de video.
+    script.
+      document.addEventListener('DOMContentLoaded', function() {
+        const videos = !{JSON.stringify(videos)};
+        videos.forEach((video, index) => {
+          const videoElement = document.getElementById('video-' + index);
+          // Comprueba soporte HLS nativo o usa hls.js
+          if (Hls.isSupported()) {
+            const hls = new Hls();
+            hls.loadSource(video.url);
+            hls.attachMedia(videoElement);
+          } else if (videoElement.canPlayType('application/vnd.apple.mpegurl')) {
+            // Soporte nativo (Safari, algunos dispositivos móviles)
+            videoElement.src = video.url;
+          } else {
+            console.error(`HLS no es compatible en este navegador para ${video.quality}.`);
+          }
+        });
+      });
